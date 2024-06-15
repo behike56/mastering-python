@@ -1,28 +1,46 @@
 import BingoCard as bc
+import csv
+import sys
 
-# def
+
+def read_bingo_card(file_path) -> list[list[str]]:
+    with open(file_path, 'r') as file:
+        reader = csv.reader(file)
+        bingo_card = [row for row in reader]
+    return bingo_card
+
+
+def display_bingo_card(bingo_card):
+    print("Bingo Card:")
+    for row in bingo_card:
+        print(" | ".join(row))
+        print("-" * (len(row) * 4 - 1))
 
 
 def main():
-    import sys
+
     input = sys.stdin.read
-    data = input().split()
+    file_path = input().split()
+
+    bingo_data = read_bingo_card(file_path)
+
+    display_bingo_card(bingo_data)
 
     index = 0
-    N = int(data[index])
+    N = int(bingo_data[index])
     index += 1
-    K = int(data[index])
+    K = int(bingo_data[index])
     index += 1
 
     # ビンゴカードの読み込み
     bingo_card_data = []
     for i in range(N):
-        row = list(map(int, data[index:index + N]))
+        row = list(map(int, bingo_data[index:index + N]))
         bingo_card_data.append(row)
         index += N
 
     # 抽選された数字の読み込み
-    drawn_numbers = list(map(int, data[index:index + K]))
+    drawn_numbers = list(map(int, bingo_data[index:index + K]))
 
     # ビンゴカードを作成
     bingo_card = bc.BingoCard(N, bingo_card_data)
