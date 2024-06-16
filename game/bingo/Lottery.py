@@ -1,3 +1,3 @@
 class LotteryData:
-    def __init__(self, n, card):
-        pass
+    def __init__(self, data: list[str]):
+        self.numbers = data
