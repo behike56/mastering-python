@@ -1,4 +1,4 @@
-class BingoCard:
+class CardData:
     def __init__(self, n, card):
         assert n % 2 == 1, "N must be an odd number."  # Nが奇数であることを確認
         self.n = n

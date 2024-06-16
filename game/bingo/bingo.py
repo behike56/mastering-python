@@ -1,49 +1,65 @@
-import BingoCard as bc
-import csv
+import Card as crd
+import Play as ply
+import Lottery as lty
+
+from bingo_file_reader import read_bingo_data
+
 import sys
 
 
-def read_bingo_card(file_path) -> list[list[str]]:
-    with open(file_path, 'r') as file:
-        reader = csv.reader(file)
-        bingo_card = [row for row in reader]
-    return bingo_card
-
-
-def display_bingo_card(bingo_card):
-    print("Bingo Card:")
-    for row in bingo_card:
-        print(" | ".join(row))
-        print("-" * (len(row) * 4 - 1))
-
-
-def main():
+def _let_input_filepath() -> str:
 
     input = sys.stdin.read
     file_path = input().split()
 
-    bingo_data = read_bingo_card(file_path)
+    return file_path
 
-    display_bingo_card(bingo_data)
 
-    index = 0
-    N = int(bingo_data[index])
-    index += 1
-    K = int(bingo_data[index])
-    index += 1
+def _display_bingo_card(bingo_card: list[list[str]]) -> int:
+
+    print("Bingo Card:")
+
+    for row in bingo_card:
+        print(" | ".join(row))
+        print("-" * (len(row) * 4 - 1))
+
+    return 0
+
+
+def _create_bingo_card_data(
+        play_data: ply.PlayData,
+        card_data: crd.CardData) -> list:
 
     # ビンゴカードの読み込み
     bingo_card_data = []
-    for i in range(N):
-        row = list(map(int, bingo_data[index:index + N]))
+    for i in range(card_size):
+        row = list(map(int, bingo_data[index:index + card_size]))
         bingo_card_data.append(row)
-        index += N
+        index += card_size
+
+
+def main() -> int:
+
+    # 標準入力からファイルパスを取得する
+    file_path = _let_input_filepath()
+
+    # ファイルからビンゴゲームのデータを取得する
+    bingo_data = read_bingo_data(file_path)
+
+    # プレイデータを作成
+    play_data = ply.PlayData(bingo_data[0])
+
+    # カードデータを作成
+    card_data = bc.CardData(play_data.card_size, bingo_card_data)
+
+    # 抽選データを作成
+    lottery_data = lty.LotteryData()
+
+    # ビンゴカードを表示する
+    _display_bingo_card(bingo_data)
 
     # 抽選された数字の読み込み
-    drawn_numbers = list(map(int, bingo_data[index:index + K]))
-
-    # ビンゴカードを作成
-    bingo_card = bc.BingoCard(N, bingo_card_data)
+    drawn_numbers = list(map(int, bingo_data[index:index + lottery_times]))
 
     # 抽選された数字に基づいてビンゴカードの状態を更新
     for number in drawn_numbers:
