@@ -49,6 +49,5 @@ def _let_input_filepath() -> str:
     return file_path
 
 
-
 if __name__ == "__main__":
     main()
